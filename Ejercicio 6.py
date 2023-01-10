@@ -3,6 +3,8 @@ countries_dict = {'30': 'Grecia', '33': 'Francia', '34': 'España', '351': 'Port
 
 def check_phone(nun_completo):
     """"Esta función determina el país del prefijo y cambia el formato del teléfono introducido.
+    :param nun_completo: Número de teléfono introducido.
+    :return Nombre del país al que le pertenece el prefijo y el número de teléfono ordenado.
     """
     separacion1 = nun_completo.split('(')
     separacion2 = separacion1[1].split(')')
@@ -13,6 +15,7 @@ def check_phone(nun_completo):
     telefono = '+' + prefijo + '-' + numero
     return print(nom_prefijo + ' ' + telefono)
 #quitar el print
+#poner el help
 num_completo = input('Introduce un número\n')
 check_phone(num_completo)
 #(33)3659-987
