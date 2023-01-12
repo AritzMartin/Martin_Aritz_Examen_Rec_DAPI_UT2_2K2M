@@ -8,7 +8,7 @@ nif_dict = {"0": "T", "1": 'R', "2": 'W', "3": 'A', "4": 'G', "5": 'M', "6": 'Y'
 def check_DGT(direccion):
     """"Esta función se dedica a abrir el documento, a leerlo y partir los datos; y finalmente cerrar el archivo.
     :param direccion: Es la dirección que tiene el archivo dentro de la carpeta donde esta guardada.
-    :return
+    :return Te devuelve los datos que ha corregido y los sobreescribe en el archivo original.
     """
     with open(direccion, 'r', encoding='utf-8') as file:
         fichero = file.readlines()
@@ -32,8 +32,10 @@ def check_DGT(direccion):
             datos_dgt['Apellidos'] = check_username(datos_dgt['Apellidos'])
             datos_dgt['DNI'] = check_nif(datos_dgt['DNI'])
             datos_dgt['Teléfono'] = check_phone(datos_dgt['Teléfono'])
-
-
+            datos_dgt['Total Multas'] = calculate_bill(datos_dgt['Multas Radar'], datos_dgt['Multas ITV'],
+                                                       datos_dgt['Multas Estupefacientes'])
+        with open(direccion, 'w') as file:
+            file.write(str(lista_final))
     return
 
 def check_username(nombre):
@@ -78,4 +80,8 @@ def calculate_bill(multas_radar, multas_ITV, multas_estupefacientes):
 
 check_DGT('C:\datos\Documents\Aritz Martin 2M\DAPI\Recuperacion_DAPI_AritzMartin\Aritz Martin Girona - DGT - copia.csv')
 
-
+help(check_DGT)
+help(check_username)
+help(check_nif)
+help(check_phone)
+help(calculate_bill)
