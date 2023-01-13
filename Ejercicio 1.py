@@ -1,3 +1,5 @@
+import csv
+
 countries_dict = {'30': 'Grecia', '33': 'Francia', '34': 'España', '351': 'Portugal', '380': 'Ucrania',
                   '39': 'Italia', '41': 'Suiza', '44': 'Reino Unido', '49': 'Alemania', '7': 'Rusia'}
 
@@ -13,9 +15,14 @@ def check_DGT(direccion):
     with open(direccion, 'r', encoding='utf-8') as file:
         fichero = file.readlines()
         fichero_partido = []
-        lista_final = []
+    with open(direccion, 'w', encoding='utf-8', newline='') as documento:
+        titulos = ['Nombre', 'Apellidos', 'DNI', 'Teléfono', 'País', 'Vehículo', 'Multas Radar',
+                   'Multas ITV', 'Multas Estupefacientes', 'Total Multas']
+        escribir = csv.DictWriter(documento, fieldnames=titulos)
+        escribir.writeheader()
         for datos in fichero:
             fichero_partido.append(datos.split(','))
+        lista_final = []
         for lista in fichero_partido:
             dict_lista = {}
             dict_lista['Nombre'] = lista[0]
@@ -27,22 +34,24 @@ def check_DGT(direccion):
             dict_lista['Multas ITV'] = lista[6]
             dict_lista['Multas Estupefacientes'] = lista[7]
             lista_final.append(dict_lista)
+
+        lista_final.pop(0)
+        
         for datos_dgt in lista_final:
             datos_dgt['Nombre'] = check_username(datos_dgt['Nombre'])
             datos_dgt['Apellidos'] = check_username(datos_dgt['Apellidos'])
-            datos_dgt['DNI'] = check_nif(datos_dgt['DNI'])
             datos_dgt['Teléfono'] = check_phone(datos_dgt['Teléfono'])
+            datos_dgt['DNI'] = check_nif(datos_dgt['DNI'])
             datos_dgt['Total Multas'] = calculate_bill(datos_dgt['Multas Radar'], datos_dgt['Multas ITV'],
                                                        datos_dgt['Multas Estupefacientes'])
-        with open(direccion, 'w') as file:
-            file.write(str(lista_final))
+
+            escribir.writerow(datos_dgt)
     return
 
 def check_username(nombre):
     """""
     Esta función tiene el objetivo de Capitalizar los nombres y apellidos que metamos.
     :param nombre: Nombre introducido.
-    :param apellidos: Apellidos introducidos.
     :return Nombre y apellidos capitalizados.
     """
     return nombre.title()
@@ -52,7 +61,7 @@ def check_nif(usuario_nif):
     :param usuario_nif: Los datos del DNI introducido.
     :return El DNI corregido.
     """
-    return str(usuario_nif[0:8]) + nif_dict[str(int(usuario_nif[0:8]) % 23)]
+    return str(usuario_nif[0:8] + nif_dict[str(int(usuario_nif[0:8]) % 23)])
 
 def check_phone(nun_completo):
     """"Esta función determina el país del prefijo y cambia el formato del teléfono introducido.
@@ -75,10 +84,10 @@ def calculate_bill(multas_radar, multas_ITV, multas_estupefacientes):
     :param multas_estupefacientes: Un (int) del volor a pagar por la multa de estupefacientes.
     :return La suma de las multas (int).
     """
-    bill = int(multas_radar + multas_ITV + multas_estupefacientes)
+    bill = int(multas_radar) + int(multas_ITV) + int(multas_estupefacientes)
     return bill
 
-check_DGT('C:\datos\Documents\Aritz Martin 2M\DAPI\Recuperacion_DAPI_AritzMartin\Aritz Martin Girona - DGT - copia.csv')
+check_DGT("C:\datos\Documents\Aritz Martin 2M\DAPI\Recuperacion_DAPI_AritzMartin\Aritz Martin Girona - DGT.csv")
 
 help(check_DGT)
 help(check_username)
