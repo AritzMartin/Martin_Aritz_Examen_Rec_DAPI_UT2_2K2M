@@ -36,7 +36,7 @@ def check_DGT(direccion):
             lista_final.append(dict_lista)
 
         lista_final.pop(0)
-        
+
         for datos_dgt in lista_final:
             datos_dgt['Nombre'] = check_username(datos_dgt['Nombre'])
             datos_dgt['Apellidos'] = check_username(datos_dgt['Apellidos'])
